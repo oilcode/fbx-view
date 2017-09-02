@@ -25,8 +25,8 @@
 # 编译方法
         Windows7
         VisualStudio2013
-        向工程中添加你自己的DirectX11的include目录和lib目录
-        然后就可以编译了
+        向工程中添加你自己的DirectX11的include目录和lib目录
+        然后就可以编译了
         
 # 操作方法
     程序运行后，把fbx文件拖放到程序窗口内，fbx模型就会被加载并渲染出来。
