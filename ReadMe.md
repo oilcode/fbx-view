@@ -9,8 +9,8 @@ Unity3D引擎就是使用fbx文件作为主要的模型文件。<br>
 <br>
 <br>
 # 关键代码
-
-#2 Loading fbx :
+<br>
+### Loading fbx :
 StFBXDefine.cpp <br>
 StFBXDefine.h <br>
 StFBXManager.cpp <br>
@@ -18,15 +18,16 @@ StFBXManager.h <br>
 StFBXModel.cpp <br>
 StFBXModel.h <br>
 StFBXUserDefine.h <br>
-
-#2 Rending fbx :
+<br>
+### Rending fbx :
 SoD3DModelFbx.cpp <br>
 SoD3DModelFbx.h <br>
 SoD3DLogicFlowHelp.cpp <br>
-
-
+<br>
+<br>
 # 操作方法
 程序运行后，把fbx文件拖放到程序窗口内，fbx模型就会被加载并渲染出来。 <br>
+如果是动画模型，则会播放动画。 <br>
 把 png,dds,tga 贴图拖放到程序窗口内，fbx模型就会蒙上该贴图。 <br>
 <br>
 
