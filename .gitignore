@@ -1,3 +1,8 @@
 /debug
 /release
-*.exe
+/source_code/debug
+/source_code/release
+*.pdb
+*.sdf
+*.opensdf
+log_*.txt
