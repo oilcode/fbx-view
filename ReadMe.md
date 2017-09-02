@@ -35,4 +35,4 @@
     如果是动画模型，则会播放动画。
     把 png,dds,tga 贴图拖放到程序窗口内，fbx模型就会蒙上该贴图。
 
-
+### 更多详情请移步到我的博客 http://blog.csdn.net/oilcode/article/details/77804258
