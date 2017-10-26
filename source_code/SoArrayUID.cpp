@@ -1,7 +1,5 @@
 //----------------------------------------------------------------
 #include "SoArrayUID.h"
-#include "SoMemoryHelp.h"
-#include <string> //为了能够调用 malloc free memcpy 等函数
 //----------------------------------------------------------------
 SoArrayUID::SoArrayUID()
 :m_pElementBuff(0)
@@ -24,7 +22,7 @@ SoArrayUID::~SoArrayUID()
 	}
 }
 //----------------------------------------------------------------
-bool SoArrayUID::InitArray(int nElementSize, int nInitCapacity, int nAddCount)
+bool SoArrayUID::InitArray(soint32 nElementSize, soint32 nInitCapacity, soint32 nAddCount)
 {
 	m_nUsingElementCount = 0;
 	m_nElementSize = nElementSize;
@@ -32,21 +30,21 @@ bool SoArrayUID::InitArray(int nElementSize, int nInitCapacity, int nAddCount)
 	return ResizeArray(nInitCapacity);
 }
 //----------------------------------------------------------------
-bool SoArrayUID::ResizeArray(int newCapacity)
+bool SoArrayUID::ResizeArray(soint32 newCapacity)
 {
 	if (newCapacity <= m_nCapacity)
 	{
 		return true;
 	}
 	//申请新的内存，包含m_pStatusBuff内存块。
-	const int newSize = m_nElementSize * newCapacity + newCapacity;
+	const soint32 newSize = m_nElementSize * newCapacity + newCapacity;
 	char* newElementBuff = (char*)malloc(newSize);
 	if (newElementBuff == 0)
 	{
 		return false;
 	}
 	char* newStatusBuff = newElementBuff + m_nElementSize * newCapacity;
-	for (int i = 0; i < newCapacity; ++i)
+	for (soint32 i = 0; i < newCapacity; ++i)
 	{
 		newStatusBuff[i] = Status_Empty;
 	}
@@ -74,7 +72,7 @@ void SoArrayUID::ClearArray()
 {
 	if (m_pStatusBuff)
 	{
-		for (int i = 0; i < m_nCapacity; ++i)
+		for (soint32 i = 0; i < m_nCapacity; ++i)
 		{
 			m_pStatusBuff[i] = Status_Empty;
 		}
@@ -82,7 +80,7 @@ void SoArrayUID::ClearArray()
 	m_nUsingElementCount = 0;
 }
 //----------------------------------------------------------------
-int SoArrayUID::FillAt(int nUID, const void* pElement)
+soint32 SoArrayUID::FillAt(soint32 nUID, const void* pElement)
 {
 	if (m_pElementBuff == 0)
 	{
@@ -109,13 +107,13 @@ int SoArrayUID::FillAt(int nUID, const void* pElement)
 		return -1;
 	}
 	//
-	SoTinyMemCpy(m_pElementBuff + nUID * m_nElementSize, pElement, m_nElementSize);
+	memcpy(m_pElementBuff + nUID * m_nElementSize, pElement, m_nElementSize);
 	m_pStatusBuff[nUID] = Status_Using;
 	++m_nUsingElementCount;
 	return nUID;
 }
 //----------------------------------------------------------------
-int SoArrayUID::TakeNew(void** ppElement)
+soint32 SoArrayUID::TakeNew(void** ppElement)
 {
 	if (m_pElementBuff == 0)
 	{
@@ -126,7 +124,7 @@ int SoArrayUID::TakeNew(void** ppElement)
 		return -1;
 	}
 	//
-	int nUID = FindFirstEmptyElement();
+	soint32 nUID = FindFirstEmptyElement();
 	if (nUID == -1)
 	{
 		if (ResizeArray(m_nCapacity + m_nAddCount) == false)
@@ -146,7 +144,7 @@ int SoArrayUID::TakeNew(void** ppElement)
 	return nUID;
 }
 //----------------------------------------------------------------
-void SoArrayUID::ClearAt(int nUID)
+void SoArrayUID::ClearAt(soint32 nUID)
 {
 	if (m_pStatusBuff == 0)
 	{
@@ -164,7 +162,7 @@ void SoArrayUID::ClearAt(int nUID)
 	m_pStatusBuff[nUID] = (char)Status_Empty;
 }
 //----------------------------------------------------------------
-void* SoArrayUID::GetAt(int nUID) const
+void* SoArrayUID::GetAt(soint32 nUID) const
 {
 	if (m_pElementBuff != 0 && nUID >= 0 && nUID < m_nCapacity && m_pStatusBuff[nUID] == Status_Using)
 	{
@@ -175,28 +173,73 @@ void* SoArrayUID::GetAt(int nUID) const
 		return 0;
 	}
 }
+////----------------------------------------------------------------
+//soint32 SoArrayUID::GetStatus(soint32 nUID) const
+//{
+//	if (m_pStatusBuff != 0 && nUID >= 0 && nUID < m_nCapacity)
+//	{
+//		return (soint32)(m_pStatusBuff[nUID]);
+//	}
+//	else
+//	{
+//		return Status_Invalid;
+//	}
+//}
 //----------------------------------------------------------------
-int SoArrayUID::GetStatus(int nUID) const
+soint32 SoArrayUID::GetUID(const void* pElement, soint32 nValidSize) const
 {
-	if (m_pStatusBuff != 0 && nUID >= 0 && nUID < m_nCapacity)
+	if (pElement == 0)
 	{
-		return (int)(m_pStatusBuff[nUID]);
+		return -1;
 	}
-	else
+	if (m_pElementBuff == 0)
 	{
-		return Status_Invalid;
+		return -1;
 	}
+	if (nValidSize > m_nElementSize)
+	{
+		return -1;
+	}
+	//
+	soint32 theUID = -1;
+	const char* destElement = (const char*)pElement;
+	char* tempElement = 0;
+	bool bFindElement = true;
+	for (soint32 i = 0; i < m_nCapacity; ++i)
+	{
+		if (m_pStatusBuff[i] != Status_Using)
+		{
+			continue;
+		}
+
+		tempElement = m_pElementBuff + i * m_nElementSize;
+		bFindElement = true;
+		for (soint32 k = 0; k < nValidSize; ++k)
+		{
+			if (tempElement[k] != destElement[k])
+			{
+				bFindElement = false;
+				break;
+			}
+		}
+		if (bFindElement == true)
+		{
+			theUID = i;
+			break;
+		}
+	}
+	return theUID;
 }
 //----------------------------------------------------------------
-int SoArrayUID::FindFirstEmptyElement()
+soint32 SoArrayUID::FindFirstEmptyElement()
 {
 	if (m_pStatusBuff == 0)
 	{
 		return -1;
 	}
 	//
-	int theUID = -1;
-	for (int i = 0; i < m_nCapacity; ++i)
+	soint32 theUID = -1;
+	for (soint32 i = 0; i < m_nCapacity; ++i)
 	{
 		if (m_pStatusBuff[i] == Status_Empty)
 		{
