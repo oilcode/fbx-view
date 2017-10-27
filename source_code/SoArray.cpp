@@ -168,9 +168,10 @@ soint32 SoArray::InsertAt(soint32 nIndex, const void* pElement)
 		return nIndex;
 	}
 	//
-	arrayuid theUID = m_pUIDBuff[m_nSize-1];
-	for (soint32 i = m_nSize-1; i > nIndex; --i)
+	arrayuid theUID = -1;
+	for (soint32 i = nIndex + 1; i < m_nSize; ++i)
 	{
+		theUID = m_pUIDBuff[i];
 		m_pUIDBuff[i] = m_pUIDBuff[i - 1];
 	}
 	m_pUIDBuff[nIndex] = theUID;

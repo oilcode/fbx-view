@@ -45,8 +45,6 @@ public:
 	//添加一个元素 "ab0cd" ，字符串实际值是 "ab" ，但是填充之后元素的内存的值是 "ab0cd" 。
 	//当查找一个元素 "ab0ff" 时，你认为查找的字符串是 "ab" ，肯定能找到，但是实际查找的元素是 "ab0ff" ，结果是找不到。
 	soint32 GetUID(const void* pElement, soint32 nValidSize) const;
-    //获取元素的大小。
-    soint32 GetSizeofElement() const;
 
 private:
 	//找到第一个空元素。
@@ -80,11 +78,6 @@ inline soint32 SoArrayUID::GetCapacity() const
 inline soint32 SoArrayUID::GetUsingElementCount() const
 {
 	return m_nUsingElementCount;
-}
-//----------------------------------------------------------------
-inline soint32 SoArrayUID::GetSizeofElement() const
-{
-    return m_nElementSize;
 }
 //----------------------------------------------------------------
 #endif //_SoArrayUID_h_
