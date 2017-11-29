@@ -7,7 +7,7 @@
     Unity3D引擎就是使用fbx文件作为主要的模型文件。
     本demo可以正确处理fbx静态模型，也可以正确处理动画模型。
 
-![demo](http://img.blog.csdn.net/20170902224214066)
+![demo](screenshot.png)
 
 # 关键代码
 ### Loading fbx :
