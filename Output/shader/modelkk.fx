@@ -68,20 +68,14 @@ void CalculatePosNormalUV(in uint3 ValueIndex, out float4 thePos, out float4 the
 	tempUV[1] = PosPixelIndex / g_VertexTextureWidth;
 	thePos.x = g_TextureList[1][tempUV];
 	//
-	tempUV[0] += 1;
-	if (tempUV[0] >= g_VertexTextureWidth)
-	{
-		tempUV[0] = 0;
-		tempUV[1] += 1;
-	}
+	PosPixelIndex += 1;
+	tempUV[0] = PosPixelIndex % g_VertexTextureWidth;
+	tempUV[1] = PosPixelIndex / g_VertexTextureWidth;
 	thePos.y = g_TextureList[1][tempUV];
 	//
-	tempUV[0] += 1;
-	if (tempUV[0] >= g_VertexTextureWidth)
-	{
-		tempUV[0] = 0;
-		tempUV[1] += 1;
-	}
+	PosPixelIndex += 1;
+	tempUV[0] = PosPixelIndex % g_VertexTextureWidth;
+	tempUV[1] = PosPixelIndex / g_VertexTextureWidth;
 	thePos.z = g_TextureList[1][tempUV];
 	thePos.w = 1.0f;
 	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -92,20 +86,14 @@ void CalculatePosNormalUV(in uint3 ValueIndex, out float4 thePos, out float4 the
 	tempUV[1] = NormalPixelIndex / g_VertexTextureWidth;
 	theNormal.x = g_TextureList[1][tempUV];
 	//
-	tempUV[0] += 1;
-	if (tempUV[0] >= g_VertexTextureWidth)
-	{
-		tempUV[0] = 0;
-		tempUV[1] += 1;
-	}
+	NormalPixelIndex += 1;
+	tempUV[0] = NormalPixelIndex % g_VertexTextureWidth;
+	tempUV[1] = NormalPixelIndex / g_VertexTextureWidth;
 	theNormal.y = g_TextureList[1][tempUV];
 	//
-	tempUV[0] += 1;
-	if (tempUV[0] >= g_VertexTextureWidth)
-	{
-		tempUV[0] = 0;
-		tempUV[1] += 1;
-	}
+	NormalPixelIndex += 1;
+	tempUV[0] = NormalPixelIndex % g_VertexTextureWidth;
+	tempUV[1] = NormalPixelIndex / g_VertexTextureWidth;
 	theNormal.z = g_TextureList[1][tempUV];
 	theNormal.w = 0.0f;
 	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -115,12 +103,9 @@ void CalculatePosNormalUV(in uint3 ValueIndex, out float4 thePos, out float4 the
 	tempUV[1] = UVPixelIndex / g_VertexTextureWidth;
 	theUV.x = g_TextureList[1][tempUV];
 	//
-	tempUV[0] += 1;
-	if (tempUV[0] >= g_VertexTextureWidth)
-	{
-		tempUV[0] = 0;
-		tempUV[1] += 1;
-	}
+	UVPixelIndex += 1;
+	tempUV[0] = UVPixelIndex % g_VertexTextureWidth;
+	tempUV[1] = UVPixelIndex / g_VertexTextureWidth;
 	theUV.y = g_TextureList[1][tempUV];
 	//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 }
@@ -136,92 +121,59 @@ float4x4 GetSingleBoneAnimMatrix(in uint BoneIndex)
 	tempUV[1] = startPixelIndex / g_AnimTextureWidth;
 	finalMat._m00 = g_TextureList[2][tempUV];
 	//
-	tempUV[0] += 1;
-	if (tempUV[0] >= g_AnimTextureWidth)
-	{
-		tempUV[0] = 0;
-		tempUV[1] += 1;
-	}
+	startPixelIndex += 1;
+	tempUV[0] = startPixelIndex % g_AnimTextureWidth;
+	tempUV[1] = startPixelIndex / g_AnimTextureWidth;
 	finalMat._m01 = g_TextureList[2][tempUV];
 	//
-	tempUV[0] += 1;
-	if (tempUV[0] >= g_AnimTextureWidth)
-	{
-		tempUV[0] = 0;
-		tempUV[1] += 1;
-	}
+	startPixelIndex += 1;
+	tempUV[0] = startPixelIndex % g_AnimTextureWidth;
+	tempUV[1] = startPixelIndex / g_AnimTextureWidth;
 	finalMat._m02 = g_TextureList[2][tempUV];
 	//
-	tempUV[0] += 1;
-	if (tempUV[0] >= g_AnimTextureWidth)
-	{
-		tempUV[0] = 0;
-		tempUV[1] += 1;
-	}
+	startPixelIndex += 1;
+	tempUV[0] = startPixelIndex % g_AnimTextureWidth;
+	tempUV[1] = startPixelIndex / g_AnimTextureWidth;
 	finalMat._m10 = g_TextureList[2][tempUV];
 	//
-	tempUV[0] += 1;
-	if (tempUV[0] >= g_AnimTextureWidth)
-	{
-		tempUV[0] = 0;
-		tempUV[1] += 1;
-	}
+	startPixelIndex += 1;
+	tempUV[0] = startPixelIndex % g_AnimTextureWidth;
+	tempUV[1] = startPixelIndex / g_AnimTextureWidth;
 	finalMat._m11 = g_TextureList[2][tempUV];
 	//
-	tempUV[0] += 1;
-	if (tempUV[0] >= g_AnimTextureWidth)
-	{
-		tempUV[0] = 0;
-		tempUV[1] += 1;
-	}
+	startPixelIndex += 1;
+	tempUV[0] = startPixelIndex % g_AnimTextureWidth;
+	tempUV[1] = startPixelIndex / g_AnimTextureWidth;
 	finalMat._m12 = g_TextureList[2][tempUV];
 	//
-	tempUV[0] += 1;
-	if (tempUV[0] >= g_AnimTextureWidth)
-	{
-		tempUV[0] = 0;
-		tempUV[1] += 1;
-	}
+	startPixelIndex += 1;
+	tempUV[0] = startPixelIndex % g_AnimTextureWidth;
+	tempUV[1] = startPixelIndex / g_AnimTextureWidth;
 	finalMat._m20 = g_TextureList[2][tempUV];
 	//
-	tempUV[0] += 1;
-	if (tempUV[0] >= g_AnimTextureWidth)
-	{
-		tempUV[0] = 0;
-		tempUV[1] += 1;
-	}
+	startPixelIndex += 1;
+	tempUV[0] = startPixelIndex % g_AnimTextureWidth;
+	tempUV[1] = startPixelIndex / g_AnimTextureWidth;
 	finalMat._m21 = g_TextureList[2][tempUV];
 	//
-	tempUV[0] += 1;
-	if (tempUV[0] >= g_AnimTextureWidth)
-	{
-		tempUV[0] = 0;
-		tempUV[1] += 1;
-	}
+	startPixelIndex += 1;
+	tempUV[0] = startPixelIndex % g_AnimTextureWidth;
+	tempUV[1] = startPixelIndex / g_AnimTextureWidth;
 	finalMat._m22 = g_TextureList[2][tempUV];
 	//
-	tempUV[0] += 1;
-	if (tempUV[0] >= g_AnimTextureWidth)
-	{
-		tempUV[0] = 0;
-		tempUV[1] += 1;
-	}
+	startPixelIndex += 1;
+	tempUV[0] = startPixelIndex % g_AnimTextureWidth;
+	tempUV[1] = startPixelIndex / g_AnimTextureWidth;
 	finalMat._m30 = g_TextureList[2][tempUV];
 	//
-	tempUV[0] += 1;
-	if (tempUV[0] >= g_AnimTextureWidth)
-	{
-		tempUV[0] = 0;
-		tempUV[1] += 1;
-	}
+	startPixelIndex += 1;
+	tempUV[0] = startPixelIndex % g_AnimTextureWidth;
+	tempUV[1] = startPixelIndex / g_AnimTextureWidth;
 	finalMat._m31 = g_TextureList[2][tempUV];
 	//
-	tempUV[0] += 1;
-	if (tempUV[0] >= g_AnimTextureWidth)
-	{
-		tempUV[0] = 0;
-		tempUV[1] += 1;
-	}
+	startPixelIndex += 1;
+	tempUV[0] = startPixelIndex % g_AnimTextureWidth;
+	tempUV[1] = startPixelIndex / g_AnimTextureWidth;
 	finalMat._m32 = g_TextureList[2][tempUV];
 	//
 	finalMat._m03 = 0.0f;
