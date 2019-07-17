@@ -9,4 +9,5 @@
 *.user
 *.iobj
 *.ipdb
+*.ilk
 log_*.txt
