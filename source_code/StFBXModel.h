@@ -25,18 +25,18 @@ public:
 	void CalculateMeshBoundingBox(SoMathFloat3* pMinPos, SoMathFloat3* pMaxPos);
 	
 protected:
+	StFBXMeshData* GetMeshData_Modify();
 	StFBXControlPointGroup* GetControlPointGroup_Modify();
 	StFBXBoneGroup* GetBoneGroup_Modify();
 	StFBXModelAnimation* GetAnimation_Modify();
-	StFBXMeshData* GetMeshData_Modify();
 
 private:
-	StFBXControlPointGroup m_kControlPointGroup;
-	StFBXBoneGroup m_kBoneGroup;
-	StFBXModelAnimation m_kAnimation;
 	//载入数据后，这里的Mesh数据渲染出来就是默认的Pose；
 	//当执行CalculateMeshDataByKeyFrame()后，这里的Mesh数据就变成了指定帧的Pose。
 	StFBXMeshData m_kMeshData;
+	StFBXControlPointGroup m_kControlPointGroup;
+	StFBXBoneGroup m_kBoneGroup;
+	StFBXModelAnimation m_kAnimation;
 };
 //----------------------------------------------------------------
 #endif

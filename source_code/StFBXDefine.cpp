@@ -4,8 +4,16 @@
 #include "SoSimpleLog.h"
 //----------------------------------------------------------------
 StFBXMeshData::StFBXMeshData()
+:pVertexBuff(NULL)
+,nVertexBuffSize(0)
+,nVertexCount(0)
+,pIndexBuff(NULL)
+,nIndexBuffSize(0)
+,nIndexCount(0)
+,pVertexIndex2ControlPointIndex(NULL)
+,nSizeofVertexData(0)
 {
-	ResetInit();
+
 }
 //----------------------------------------------------------------
 StFBXMeshData::~StFBXMeshData()
@@ -13,35 +21,71 @@ StFBXMeshData::~StFBXMeshData()
 	if (pVertexBuff)
 	{
 		free(pVertexBuff);
-		pVertexBuff = 0;
+		pVertexBuff = NULL;
 	}
 	if (pIndexBuff)
 	{
 		free(pIndexBuff);
-		pIndexBuff = 0;
+		pIndexBuff = NULL;
 	}
 	if (pVertexIndex2ControlPointIndex)
 	{
 		free(pVertexIndex2ControlPointIndex);
-		pVertexIndex2ControlPointIndex = 0;
+		pVertexIndex2ControlPointIndex = NULL;
 	}
 }
 //----------------------------------------------------------------
-void StFBXMeshData::ResetInit()
+void StFBXMeshData::SetVertexType(const SoBitFlag& kType)
 {
-	pVertexBuff = 0;
-	nVertexBuffSize = 0;
-	nVertexCount = 0;
-	pIndexBuff = 0;
-	nIndexBuffSize = 0;
-	nIndexCount = 0;
-	pVertexIndex2ControlPointIndex = 0;
-	kVertexType.Clear();
-	nSizeofVertexData = 0;
+	kVertexType.SetValue(kType.GetValue());
+	//计算顶点结构的sizeof值。
+	//顶点坐标。
+	nSizeofVertexData = StFBX_Sizeof_Vector3;
+	//法线。
+	if (kVertexType.IsFlagExist(StFBXElement_Normal))
+	{
+		nSizeofVertexData += StFBX_Sizeof_Vector3;
+	}
+	//切线。
+	if (kVertexType.IsFlagExist(StFBXElement_Tangent))
+	{
+		nSizeofVertexData += StFBX_Sizeof_Vector3;
+	}
+	//顶点色。
+	if (kVertexType.IsFlagExist(StFBXElement_Color))
+	{
+		nSizeofVertexData += StFBX_Sizeof_Color;
+	}
+	//UV1。
+	if (kVertexType.IsFlagExist(StFBXElement_UV1))
+	{
+		nSizeofVertexData += StFBX_Sizeof_UV;
+	}
+	//UV2。
+	if (kVertexType.IsFlagExist(StFBXElement_UV2))
+	{
+		nSizeofVertexData += StFBX_Sizeof_UV;
+	}
 }
 //----------------------------------------------------------------
 void StFBXMeshData::ReserveVertexCount(const int nVertexTotalCount)
 {
+	if (pVertexBuff)
+	{
+		free(pVertexBuff);
+		pVertexBuff = NULL;
+	}
+	if (pIndexBuff)
+	{
+		free(pIndexBuff);
+		pIndexBuff = NULL;
+	}
+	if (pVertexIndex2ControlPointIndex)
+	{
+		free(pVertexIndex2ControlPointIndex);
+		pVertexIndex2ControlPointIndex = NULL;
+	}
+
 	nVertexCount = nVertexTotalCount;
 	nVertexBuffSize = nVertexCount * nSizeofVertexData;
 	nIndexCount = nVertexTotalCount;
@@ -60,37 +104,37 @@ StFBXBoneIndexSkinWeight::StFBXBoneIndexSkinWeight()
 //----------------------------------------------------------------
 StFBXControlPoint::StFBXControlPoint()
 {
-
-}
-//----------------------------------------------------------------
-void StFBXControlPoint::ResetInit()
-{
 	kVertex = SoMathFloat3_Zero;
 	for (int i = 0; i < StFBX_MaxCount_BoneIndexSkinWeightPerControlPoint; ++i)
 	{
+		kPairList[i].kBoneName.Clear();
 		kPairList[i].nBoneIndex = -1;
 		kPairList[i].fSkinWeight = 0.0f;
 	}
 }
 //----------------------------------------------------------------
-void StFBXControlPoint::AddBoneIndexSkinWeight(int nBoneIndex, float fSkinWeight)
+void StFBXControlPoint::AddBoneNameSkinWeight(const char* szBoneName, float fSkinWeight)
 {
-	bool bSuccess = false;
+	if (szBoneName == NULL || szBoneName[0] == 0)
+	{
+		SoLogError("StFBXControlPoint::AddBoneNameSkinWeight : BoneName is Invalid");
+		return;
+	}
 
+	bool bSuccess = false;
 	for (int i = 0; i < StFBX_MaxCount_BoneIndexSkinWeightPerControlPoint; ++i)
 	{
-		if (kPairList[i].nBoneIndex == -1)
+		if (kPairList[i].kBoneName.GetLength() == 0)
 		{
-			kPairList[i].nBoneIndex = nBoneIndex;
+			kPairList[i].kBoneName = szBoneName;
 			kPairList[i].fSkinWeight = fSkinWeight;
 			bSuccess = true;
 			break;
 		}
 	}
-
 	if (bSuccess == false)
 	{
-		SoLogError("StFBXControlPoint::AddBoneIndexSkinWeight : kPairList is full");
+		SoLogError("StFBXControlPoint::AddBoneNameSkinWeight : kPairList is full");
 	}
 }
 //----------------------------------------------------------------
@@ -113,6 +157,12 @@ StFBXControlPointGroup::~StFBXControlPointGroup()
 //----------------------------------------------------------------
 void StFBXControlPointGroup::ReserveControlPointCount(int nCount)
 {
+	if (kControlPointArray)
+	{
+		delete[] kControlPointArray;
+		kControlPointArray = NULL;
+	}
+
 	kControlPointArray = new StFBXControlPoint[nCount];
 	nControlPointValidCount = 0;
 	nControlPointMaxCount = nCount;
@@ -148,46 +198,28 @@ int StFBXControlPointGroup::GetSize() const
 {
 	return nControlPointValidCount;
 }
-////----------------------------------------------------------------
-//void StFBXControlPointGroup::CheckBoneSkinWeight()
-//{
-//	const int nCount = kControlPointArray.GetSize();
-//	for (int i = 0; i < nCount; ++i)
-//	{
-//		StFBXControlPoint* pCP = (StFBXControlPoint*)kControlPointArray.GetAt(i);
-//		if (pCP)
-//		{
-//			float fWeightSum = 0.0f;
-//			for (int m = 0; m < StFBX_MaxCount_BoneIndexSkinWeightPerControlPoint; ++m)
-//			{
-//				if (pCP->kPairList[m].nBoneIndex != -1)
-//				{
-//					fWeightSum += pCP->kPairList[m].fSkinWeight;
-//				}
-//				else
-//				{
-//					break;
-//				}
-//			}
-//
-//			if (SoMath_IsFloatZero(fWeightSum) == true)
-//			{
-//				//本控制点不受骨骼影响。
-//				//什么都不做
-//			}
-//			else
-//			{
-//				float fDelta = 1.0f - fWeightSum;
-//				if (SoMath_IsFloatZero(fDelta) == false)
-//				{
-//					SoLogDebug("StFBXControlPointGroup::CheckBoneSkinWeight : ControlPointIndex[%d] fDelta[%.3f]", i, fDelta);
-//					//调整，使得总和是1。
-//					pCP->kPairList[0].fSkinWeight += fDelta;
-//				}
-//			}
-//		}
-//	}
-//}
+//----------------------------------------------------------------
+void StFBXControlPointGroup::MakeBoneIndexByBoneName(const StFBXBoneGroup* pBoneGroup)
+{
+	for (int i = 0; i < nControlPointValidCount; ++i)
+	{
+		StFBXBoneIndexSkinWeight* pPairList = kControlPointArray[i].kPairList;
+		for (int j = 0; j < StFBX_MaxCount_BoneIndexSkinWeightPerControlPoint; ++j)
+		{
+			if (pPairList[j].kBoneName.GetLength() > 0)
+			{
+				const char* szBoneName = pPairList[j].kBoneName.GetValue();
+				int nBoneIndex = pBoneGroup->GetBoneIndexByBoneName(szBoneName);
+				pPairList[j].nBoneIndex = nBoneIndex;
+				//
+				if (nBoneIndex == -1)
+				{
+					SoLogError("StFBXControlPointGroup::MakeBoneIndexByBoneName : Can not find bone [%s]", szBoneName);
+				}
+			}
+		}
+	}
+}
 //----------------------------------------------------------------
 StFBXBone::StFBXBone()
 :nParentIndex(-1)
@@ -202,17 +234,6 @@ StFBXBone::StFBXBone()
 StFBXBone::~StFBXBone()
 {
 
-}
-//----------------------------------------------------------------
-void StFBXBone::ResetInit()
-{
-	kBoneName.Clear();
-	nParentIndex = -1;
-	for (int i = 0; i < StFBX_MaxCount_ChildBone; ++i)
-	{
-		kChildIndexList[i] = -1;
-	}
-	SoMath_MatrixIdentity(&kMatFromBoneSpaceToModelSpace);
 }
 //----------------------------------------------------------------
 StFBXBoneGroup::StFBXBoneGroup()
@@ -234,6 +255,12 @@ StFBXBoneGroup::~StFBXBoneGroup()
 //----------------------------------------------------------------
 void StFBXBoneGroup::ReserveBoneCount(int nCount)
 {
+	if (kBoneArray)
+	{
+		delete[] kBoneArray;
+		kBoneArray = NULL;
+	}
+
 	kBoneArray = new StFBXBone[nCount];
 	nBoneValidCount = 0;
 	nBoneMaxCount = nCount;
@@ -323,12 +350,6 @@ StFBXKeyFrame::StFBXKeyFrame()
 
 }
 //----------------------------------------------------------------
-void StFBXKeyFrame::ResetInit()
-{
-	fKeyTime = -1.0f;
-	SoMath_MatrixIdentity(&matKeyTransform);
-}
-//----------------------------------------------------------------
 StFBXBoneAnimation::StFBXBoneAnimation()
 :kKeyFrameArray(NULL)
 ,nFrameValidCount(0)
@@ -347,14 +368,14 @@ StFBXBoneAnimation::~StFBXBoneAnimation()
 	}
 }
 //----------------------------------------------------------------
-void StFBXBoneAnimation::ResetInit()
-{
-	nBoneIndex = -1;
-	nFrameValidCount = 0;
-}
-//----------------------------------------------------------------
 void StFBXBoneAnimation::ReserveKeyFrameCount(int nCount)
 {
+	if (kKeyFrameArray)
+	{
+		delete[] kKeyFrameArray;
+		kKeyFrameArray = NULL;
+	}
+
 	kKeyFrameArray = new StFBXKeyFrame[nCount];
 	nFrameValidCount = 0;
 	nFrameMaxCount = nCount;
@@ -395,6 +416,7 @@ StFBXModelAnimation::StFBXModelAnimation()
 :kBoneAnimationArray(NULL)
 ,nAnimValidCount(0)
 ,nAnimMaxCount(0)
+,nFrameCount(0)
 ,fAnimLength(0.0f)
 {
 
@@ -409,11 +431,27 @@ StFBXModelAnimation::~StFBXModelAnimation()
 	}
 }
 //----------------------------------------------------------------
-void StFBXModelAnimation::ReserveBoneCount(int nCount)
+void StFBXModelAnimation::ReserveBoneCount(int nBoneCount)
 {
-	kBoneAnimationArray = new StFBXBoneAnimation[nCount];
+	if (kBoneAnimationArray)
+	{
+		delete[] kBoneAnimationArray;
+		kBoneAnimationArray = NULL;
+	}
+
+	kBoneAnimationArray = new StFBXBoneAnimation[nBoneCount];
 	nAnimValidCount = 0;
-	nAnimMaxCount = nCount;
+	nAnimMaxCount = nBoneCount;
+}
+//----------------------------------------------------------------
+int StFBXModelAnimation::GetSize() const
+{
+	return nAnimValidCount;
+}
+//----------------------------------------------------------------
+int StFBXModelAnimation::GetFrameCount() const
+{
+	return nFrameCount;
 }
 //----------------------------------------------------------------
 StFBXBoneAnimation* StFBXModelAnimation::TakeNew()
@@ -442,11 +480,6 @@ StFBXBoneAnimation* StFBXModelAnimation::GetAt(int nIndex) const
 	}
 }
 //----------------------------------------------------------------
-int StFBXModelAnimation::GetSize() const
-{
-	return nAnimValidCount;
-}
-//----------------------------------------------------------------
 StFBXBoneAnimation* StFBXModelAnimation::GetBoneAnimation(int nBoneIndex) const
 {
 	StFBXBoneAnimation* pResultBoneAnim = 0;
@@ -470,5 +503,35 @@ StFBXBoneAnimation* StFBXModelAnimation::GetBoneAnimation(int nBoneIndex) const
 		}
 	}
 	return pResultBoneAnim;
+}
+//----------------------------------------------------------------
+int StFBXModelAnimation::GetKeyFrameIndexByTime(float fTime)
+{
+	int nKeyFrameIndex = -1;
+	StFBXBoneAnimation* pBoneAnim = NULL;
+	for (int boneIndex = 0; boneIndex < nAnimValidCount; ++boneIndex)
+	{
+		if (kBoneAnimationArray[boneIndex].GetSize() > 0)
+		{
+			pBoneAnim = kBoneAnimationArray + boneIndex;
+			break;
+		}
+	}
+	if (pBoneAnim)
+	{
+		for (int i = 0; i < pBoneAnim->nFrameValidCount; ++i)
+		{
+			StFBXKeyFrame* pKeyFrame = pBoneAnim->GetAt(i);
+			if (fTime >= pKeyFrame->fKeyTime - SoMath_float_zero_critical)
+			{
+				nKeyFrameIndex = i;
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+	return nKeyFrameIndex;
 }
 //----------------------------------------------------------------

@@ -1,3 +1,4 @@
+/.vs
 /debug
 /release
 /source_code/debug
@@ -5,4 +6,7 @@
 *.pdb
 *.sdf
 *.opensdf
+*.user
+*.iobj
+*.ipdb
 log_*.txt

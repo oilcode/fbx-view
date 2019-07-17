@@ -149,6 +149,30 @@ void SoD3DLogicFlowHelp_EndRender()
 	SoD3DSystem::Get()->EndRender();
 }
 //----------------------------------------------------------------
+void LoadFbxAnim()
+{
+	//加载的fbx文件只包含动画信息，例如"S_M_065@Idle.FBX"。
+	if (g_pFbxModel == NULL || g_pD3DModelFbx == NULL)
+	{
+		return;
+	}
+
+	if (StFBXManager::Get()->LoadFBX(g_buff, g_pFbxModel) == false)
+	{
+		const char* szText = SoStrFmt("加载fbx文件失败 %s", g_buff);
+		NwUIMain::Get()->SetLog(szText);
+		return;
+	}
+
+	SoD3DLogicFlowHelp_ConvertFbx2KK();
+
+	//更新UI
+	NwUIMain::Get()->SetLog(g_buff);
+	NwUIMain::Get()->SetVertexCount(g_pFbxModel->GetMeshData()->nVertexCount);
+	NwUIMain::Get()->SetControlPointCount(g_pFbxModel->GetControlPointGroup()->GetSize());
+	NwUIMain::Get()->SetAnimLength(g_pFbxModel->GetAnimTimeLength());
+}
+//----------------------------------------------------------------
 void SoD3DLogicFlowHelp_OnDropFileFbx(const char* szFileName)
 {
 	SoStrCpy(g_buff, sizeof(g_buff), szFileName);
@@ -157,6 +181,14 @@ void SoD3DLogicFlowHelp_OnDropFileFbx(const char* szFileName)
 	{
 		return;
 	}
+
+	//加载的fbx文件只包含动画信息，例如"S_M_065@Idle.FBX"。
+	if (SoStrChr(g_buff, '@') != -1)
+	{
+		LoadFbxAnim();
+		return;
+	}
+
 
 	if (g_pFbxModel)
 	{
@@ -227,7 +259,7 @@ void SoD3DLogicFlowHelp_OnDropFileFbx(const char* szFileName)
 	g_pD3DModelFbx->SetWorldMatrix(&kMatWorld);
 
 	//更新UI
-	NwUIMain::Get()->SetLog(szFileName);
+	NwUIMain::Get()->SetLog(g_buff);
 	NwUIMain::Get()->SetVertexCount(g_pFbxModel->GetMeshData()->nVertexCount);
 	NwUIMain::Get()->SetControlPointCount(g_pFbxModel->GetControlPointGroup()->GetSize());
 	NwUIMain::Get()->SetAnimLength(g_pFbxModel->GetAnimTimeLength());

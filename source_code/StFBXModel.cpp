@@ -42,25 +42,7 @@ const StFBXMeshData* StFBXModel::GetAnimationMeshData(float fTime)
 		curTime = 0.0f;
 	}
 
-	int nCurKeyFrameIndex = -1;
-	StFBXBoneAnimation* pBoneAnim = m_kAnimation.GetAt(0);
-	if (pBoneAnim)
-	{
-		const int nKeyFrameCount = pBoneAnim->GetSize();
-		for (int i = 0; i < nKeyFrameCount; ++i)
-		{
-			StFBXKeyFrame* pKeyFrame = pBoneAnim->GetAt(i);
-			if (curTime >= pKeyFrame->fKeyTime - SoMath_float_zero_critical)
-			{
-				nCurKeyFrameIndex = i;
-			}
-			else
-			{
-				break;
-			}
-		}
-	}
-
+	int nCurKeyFrameIndex = m_kAnimation.GetKeyFrameIndexByTime(curTime);
 	if (nCurKeyFrameIndex != -1)
 	{
 		CalculateMeshDataByKeyFrame(nCurKeyFrameIndex);
@@ -71,13 +53,7 @@ const StFBXMeshData* StFBXModel::GetAnimationMeshData(float fTime)
 //----------------------------------------------------------------
 int StFBXModel::GetKeyFrameCount() const
 {
-	int nCount = 0;
-	StFBXBoneAnimation* pBoneAnim = m_kAnimation.GetAt(0);
-	if (pBoneAnim)
-	{
-		nCount = pBoneAnim->GetSize();
-	}
-	return nCount;
+	return m_kAnimation.nFrameCount;
 }
 //----------------------------------------------------------------
 float StFBXModel::GetAnimTimeLength()

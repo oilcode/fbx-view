@@ -4,7 +4,7 @@
 //-----------------------------------------------------------------------------
 //本对象中最多有多少个字符（包括结束符）。
 //本对象的sizeof值是 (MaxCharCount_TinyString + 1) 。
-#define MaxCharCount_TinyString 24
+#define MaxCharCount_TinyString 55
 //-----------------------------------------------------------------------------
 class SoTinyString
 {

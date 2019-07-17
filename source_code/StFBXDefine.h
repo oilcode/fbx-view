@@ -52,7 +52,7 @@ struct StFBXMeshData
 
 	StFBXMeshData();
 	~StFBXMeshData();
-	void ResetInit();
+	void SetVertexType(const SoBitFlag& kType);
 	void ReserveVertexCount(const int nVertexCount);
 };
 //----------------------------------------------------------------
@@ -60,6 +60,7 @@ struct StFBXMeshData
 //BoneIndex就是StFBXBoneGroup中的数组下标。
 struct StFBXBoneIndexSkinWeight
 {
+	SoTinyString kBoneName;
 	int nBoneIndex;
 	float fSkinWeight;
 
@@ -75,11 +76,11 @@ struct StFBXControlPoint
 	StFBXBoneIndexSkinWeight kPairList[StFBX_MaxCount_BoneIndexSkinWeightPerControlPoint];
 
 	StFBXControlPoint();
-	void ResetInit();
-	void AddBoneIndexSkinWeight(int nBoneIndex, float fSkinWeight);
+	void AddBoneNameSkinWeight(const char* szBoneName, float fSkinWeight);
 };
 //----------------------------------------------------------------
 //存储fbx中所有的Mesh的控制点。
+struct StFBXBoneGroup; //前向声明
 struct StFBXControlPointGroup
 {
 private:
@@ -95,6 +96,9 @@ public:
 	StFBXControlPoint* TakeNew();
 	StFBXControlPoint* GetAt(int nIndex) const;
 	int GetSize() const;
+	//最开始，StFBXBoneIndexSkinWeight数据中存储的是骨骼名字。
+	//当有了骨骼数据后，就将骨骼名字转换成相应的骨骼序号。
+	void MakeBoneIndexByBoneName(const StFBXBoneGroup* pBoneGroup);
 
 	//检查每个控制点的受骨骼影响权重，保证权重的总和是1。
 	//我现在认为不需要保证权重的总和是1，
@@ -118,7 +122,6 @@ struct StFBXBone
 
 	StFBXBone();
 	~StFBXBone();
-	void ResetInit();
 };
 //----------------------------------------------------------------
 //存储fbx文件中所有的Bone，骨骼层级结构 Hierarchy。
@@ -149,7 +152,6 @@ struct StFBXKeyFrame
 	SoMathMatrix4 matKeyTransform;
 
 	StFBXKeyFrame();
-	void ResetInit();
 };
 //----------------------------------------------------------------
 //在一个动画中，一个Bone所携带的所有的动画帧。
@@ -163,7 +165,6 @@ struct StFBXBoneAnimation
 
 	StFBXBoneAnimation();
 	~StFBXBoneAnimation();
-	void ResetInit();
 	void ReserveKeyFrameCount(int nCount);
 	//向外界返回一个未使用的 StFBXKeyFrame 对象，由外界对其赋值。
 	StFBXKeyFrame* TakeNew();
@@ -181,18 +182,22 @@ struct StFBXModelAnimation
 	StFBXBoneAnimation* kBoneAnimationArray;
 	int nAnimValidCount;
 	int nAnimMaxCount;
+	//动画有多少帧。
+	int nFrameCount;
 	//动画的持续时长。单位秒。
 	float fAnimLength;
 
 	StFBXModelAnimation();
 	~StFBXModelAnimation();
-	void ReserveBoneCount(int nCount);
+	void ReserveBoneCount(int nBoneCount);
+	int GetSize() const;
+	int GetFrameCount() const;
 	//向外界返回一个未使用的 StFBXBoneAnimation 对象，由外界对其赋值。
 	StFBXBoneAnimation* TakeNew();
 	StFBXBoneAnimation* GetAt(int nIndex) const;
-	int GetSize() const;
 	StFBXBoneAnimation* GetBoneAnimation(int nBoneIndex) const;
-
+	//根据指定的时间，获取该时间要播放动画的哪一帧。
+	int GetKeyFrameIndexByTime(float fTime);
 };
 //----------------------------------------------------------------
 #endif //_StFBXDefine_h_

@@ -238,7 +238,7 @@ void GGUIWindowFactory::UISpace_SetRenderOrder(GGUIPanel* pPanel, int nIndex)
 		const int eSpaceType = pPanel->GetSpaceType();
 		if (eSpaceType >= 0 && eSpaceType < GGUIPanelSpace_Max)
 		{
-			const int nCurIndex = m_kUISpaceArray[eSpaceType].GetIndex(&pPanel);
+			const int nCurIndex = m_kUISpaceArray[eSpaceType].GetIndex(&pPanel, sizeof(GGUIPanel*));
 			if (nCurIndex != nIndex)
 			{
 				m_kUISpaceArray[eSpaceType].SwapAt(nCurIndex, nIndex);

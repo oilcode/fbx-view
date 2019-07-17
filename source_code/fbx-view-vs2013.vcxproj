@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -15,17 +15,18 @@
     <ProjectGuid>{08909B98-527B-450B-9532-C554F9A4E773}</ProjectGuid>
     <RootNamespace>fbx-view</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -45,15 +46,15 @@
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>F:\DX11SDK\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>F:\DX11SDK\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>F:\DX11SDK\Include;E:\03_MyApp\DX11_201106\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\DX11SDK\Lib\x86;E:\03_MyApp\DX11_201106\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>F:\DX11SDK\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>F:\DX11SDK\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>F:\DX11SDK\Include;E:\03_MyApp\DX11_201106\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\DX11SDK\Lib\x86;E:\03_MyApp\DX11_201106\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <BuildLog>
@@ -75,7 +76,7 @@
       <DisableSpecificWarnings>4005</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>d3dx11effect.lib;zdll.lib;lua5.1.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3dx11effect.lib;zdll.lib;lua5.1.lib;libfbxsdk.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>..\Output\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>..\third_party\dx11;..\third_party\zlib;..\third_party\lua;..\third_party\fbx;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ManifestFile>..\debug\$(TargetFileName).intermediate.manifest</ManifestFile>
@@ -111,7 +112,7 @@
       <DisableSpecificWarnings>4005</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>d3dx11effect.lib;zdll.lib;lua5.1.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3dx11effect.lib;zdll.lib;lua5.1.lib;libfbxsdk.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>..\Output\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>..\third_party\dx11;..\third_party\zlib;..\third_party\lua;..\third_party\fbx;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ManifestFile>..\release\$(TargetFileName).intermediate.manifest</ManifestFile>
@@ -251,6 +252,7 @@
     <ClInclude Include="SoArrayUID.h" />
     <ClInclude Include="SoBitFlag.h" />
     <ClInclude Include="SoCmdLineHelp.h" />
+    <ClInclude Include="SoCodeBaseInclude.h" />
     <ClInclude Include="SoConfigFile.h" />
     <ClInclude Include="SoCoroutine.h" />
     <ClInclude Include="SoCoroutineHelp.h" />
