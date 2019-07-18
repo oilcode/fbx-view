@@ -132,7 +132,8 @@ bool StKKFileKkfRead::LoadFileData(const char* szFileName, StKkfFileHead** ppFil
 
 		//读取顶点元素值的贴图数据。
 		//为了创建贴图，必须把末尾行扩充成整行。
-		const unsigned int TextureDataSize = pFileHead->KeyFrameCount * pFileHead->BoneCount * sizeof(StKKBoneTransform);
+		//贴图内存储了(pFileHead->BoneCount * pFileHead->KeyFrameCount)个StKKBoneTransform对象。
+		const unsigned int TextureDataSize = pFileHead->BoneCount * pFileHead->KeyFrameCount * sizeof(StKKBoneTransform);
 		//一个像素是4个字节
 		const int BytePerPixel = 4;
 		const int PixelCount = ((int)TextureDataSize) / BytePerPixel;
@@ -201,7 +202,13 @@ bool StKKFileKkfRead::CreateAnimTexture(int nWidth, int nHeight, const char* pSr
 //----------------------------------------------------------------
 void StKKFileKkfRead::GenerateWidthHeight(int nPixelCount, int* pWidth, int* pHeight)
 {
-	const int TryWidth = 128;
+	//贴图内存储了(pFileHead->BoneCount * pFileHead->KeyFrameCount)个StKKBoneTransform对象。
+	//当从贴图内读取StKKBoneTransform数据时，要保证该数据位于同一行内。
+	//一个StKKBoneTransform对象含有12个float数据。
+	//所以贴图宽度必须是12的整数倍。
+	//dds贴图要求宽度是4的整数倍。
+	//所以最终贴图宽度是12的整数倍。
+	const int TryWidth = 600;
 	*pWidth = TryWidth;
 	*pHeight = (nPixelCount + TryWidth - 1) / TryWidth;
 }

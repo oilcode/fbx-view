@@ -119,7 +119,7 @@ bool StKKFileKkbWrite::Write_CheckVertexType()
 		&& pMeshData->kVertexType.IsFlagExist(StFBXElement_Normal)
 		&& pMeshData->kVertexType.IsFlagExist(StFBXElement_UV1))
 	{
-		if (m_pFbxModel->GetKeyFrameCount() == 0)
+		if (m_pFbxModel->GetBoneGroup()->GetSize() == 0)
 		{
 			Result = StKKVertexType_Pos_Normal_UV;
 		}
@@ -169,9 +169,7 @@ bool StKKFileKkbWrite::Write_FillFileHead()
 	
 	const StFBXMeshData* pMeshData = m_pFbxModel->GetMeshData();
 	m_kFileHead.VertexCount = pMeshData->nVertexCount;
-
 	m_kFileHead.TriangleIndex_123 = StFBX_TriangleIndex_123;
-
 	return true;
 }
 //----------------------------------------------------------------
@@ -566,7 +564,7 @@ bool StKKFileKkbWrite::Write_GenerateBoneWeight()
 				}
 				else
 				{
-					pBoneIndex[j] = 0;
+					pBoneIndex[j] = -1;
 					pBoneWeight[j] = 0.0f;
 				}
 			}

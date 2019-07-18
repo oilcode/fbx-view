@@ -7,7 +7,6 @@
 #include "SoStringHelp.h"
 #include "GGUIImagesetManager.h"
 #include "GGUIImageset.h"
-#include "SoFileBmp.h"
 //----------------------------------------------------------------
 SoD3DTextureSystemFont* SoD3DTextureSystemFont::ms_pInstance = NULL;
 //----------------------------------------------------------------
@@ -150,16 +149,6 @@ void SoD3DTextureSystemFont::PreRenderD3DTextureSystemFont()
 		if (m_pTexture && m_pBitData)
 		{
 			m_pTexture->SetDynamicTexturePixelData(m_pBitData, m_nSizeOfBitData);
-			//
-			//stFileBmpBaseInfo kInfo;
-			//kInfo.nPictureWidth = m_nTextureWidth;
-			//kInfo.nPictureHeight = m_nTextureHeight;
-			//kInfo.ePixelFormat = FileBmpPixelFormat_ARGB;
-			//kInfo.eCoordSysType = FileBmpDataCoordSystem_Left2Right_Up2Down;
-			//kInfo.nDataSize = m_nSizeOfBitData;
-			//kInfo.pData = m_pBitData;
-			//SoFileBmp kBmp;
-			//kBmp.WriteBmpFile("TextureSystemFontnew.bmp", &kInfo);
 		}
 	}
 }

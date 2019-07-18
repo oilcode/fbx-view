@@ -159,9 +159,6 @@
     <ClCompile Include="SoArray.cpp" />
     <ClCompile Include="SoArrayUID.cpp" />
     <ClCompile Include="SoCmdLineHelp.cpp" />
-    <ClCompile Include="SoConfigFile.cpp" />
-    <ClCompile Include="SoCoroutine.cpp" />
-    <ClCompile Include="SoCoroutineHelp.cpp" />
     <ClCompile Include="SoCursor.cpp" />
     <ClCompile Include="SoD3DCamera.cpp" />
     <ClCompile Include="SoD3DCameraBase.cpp" />
@@ -186,12 +183,7 @@
     <ClCompile Include="SoD3DTextureManager.cpp" />
     <ClCompile Include="SoD3DTextureSystemFont.cpp" />
     <ClCompile Include="SoD3DUserDefine.cpp" />
-    <ClCompile Include="SoFileBmp.cpp" />
-    <ClCompile Include="SoFolderHelp.cpp" />
     <ClCompile Include="SoGameTime.cpp" />
-    <ClCompile Include="SoHash.cpp" />
-    <ClCompile Include="SoLanguageFile.cpp" />
-    <ClCompile Include="SoLanguageRule.cpp" />
     <ClCompile Include="SoMath.cpp" />
     <ClCompile Include="SoMemoryHelp.cpp" />
     <ClCompile Include="SoReadFile.cpp" />
@@ -217,7 +209,6 @@
     <ClCompile Include="WinInputMsgDispatch.cpp" />
     <ClCompile Include="WinInputMsgManager.cpp" />
     <ClCompile Include="WinMain.cpp" />
-    <ClCompile Include="xnacollision.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GGUIColor.h" />
@@ -253,9 +244,6 @@
     <ClInclude Include="SoBitFlag.h" />
     <ClInclude Include="SoCmdLineHelp.h" />
     <ClInclude Include="SoCodeBaseInclude.h" />
-    <ClInclude Include="SoConfigFile.h" />
-    <ClInclude Include="SoCoroutine.h" />
-    <ClInclude Include="SoCoroutineHelp.h" />
     <ClInclude Include="SoCursor.h" />
     <ClInclude Include="SoD3DCamera.h" />
     <ClInclude Include="SoD3DCameraBase.h" />
@@ -281,14 +269,8 @@
     <ClInclude Include="SoD3DTextureManager.h" />
     <CustomBuild Include="SoD3DTextureSystemFont.h" />
     <ClInclude Include="SoD3DUserDefine.h" />
-    <ClInclude Include="SoEnInt32.h" />
-    <ClInclude Include="SoFileBmp.h" />
-    <ClInclude Include="SoFolderHelp.h" />
     <ClInclude Include="SoGameTime.h" />
-    <ClInclude Include="SoHash.h" />
     <ClInclude Include="SoIntType.h" />
-    <ClInclude Include="SoLanguageFile.h" />
-    <ClInclude Include="SoLanguageRule.h" />
     <ClInclude Include="SoMath.h" />
     <ClInclude Include="SoMemoryHelp.h" />
     <ClInclude Include="SoReadFile.h" />
@@ -315,7 +297,6 @@
     <ClInclude Include="WinInputMsg.h" />
     <ClInclude Include="WinInputMsgDispatch.h" />
     <ClInclude Include="WinInputMsgManager.h" />
-    <ClInclude Include="xnacollision.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

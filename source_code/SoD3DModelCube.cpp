@@ -43,10 +43,6 @@ bool SoD3DModelCube::InitModel(void* pInitParam)
 		{
 			break;
 		}
-		if (CreateAABB(pCubeParam) == false)
-		{
-			break;
-		}
 		m_pShader = SoD3DShaderManager::Get()->GetShader(SoD3DShaderType_ModelCube);
 		if (m_pShader == 0)
 		{
@@ -66,7 +62,6 @@ bool SoD3DModelCube::InitModel(void* pInitParam)
 //----------------------------------------------------------------
 void SoD3DModelCube::ClearModel()
 {
-	ReleaseAABB();
 	ReleaseTexture();
 	ReleaseIndexBuffer();
 	ReleaseVertexBuffer();
@@ -100,11 +95,6 @@ void SoD3DModelCube::SetWorldMatrix(const XMFLOAT4X4* pMatWorld)
 XMMATRIX SoD3DModelCube::GetWorldMatrix() const
 {
 	return XMLoadFloat4x4(&m_matWorld);
-}
-//----------------------------------------------------------------
-const XNA::AxisAlignedBox& SoD3DModelCube::GetAABB() const
-{
-	return m_kAABB;
 }
 //----------------------------------------------------------------
 bool SoD3DModelCube::CreateVertexBuffer(const SoD3DModelInitParam_Cube* pParam)
@@ -374,25 +364,5 @@ void SoD3DModelCube::ReleaseTexture()
 		m_pTexture->RemoveRefTexture();
 		m_pTexture = NULL;
 	}
-}
-//----------------------------------------------------------------
-bool SoD3DModelCube::CreateAABB(const SoD3DModelInitParam_Cube* pParam)
-{
-	const float width = pParam->fWidth * 0.5f;
-	const float depth = pParam->fHeight * 0.5f;
-	const float height = pParam->fDepth * 0.5f;
-
-	m_kAABB.Center.x = 0.0f;
-	m_kAABB.Center.y = 0.0f;
-	m_kAABB.Center.z = 0.0f;
-	m_kAABB.Extents.x = width;
-	m_kAABB.Extents.y = depth;
-	m_kAABB.Extents.z = height;
-	return true;
-}
-//----------------------------------------------------------------
-void SoD3DModelCube::ReleaseAABB()
-{
-	//什么都不做
 }
 //----------------------------------------------------------------

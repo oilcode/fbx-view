@@ -184,6 +184,9 @@ bool StKKFileKkbRead::LoadFileData(const char* szFileName, StKkbFileHead** ppFil
 
 		//读取顶点元素值的贴图数据。
 		//为了创建贴图，必须把末尾行扩充成整行。
+		//该贴图内会先存储Pos数据（float3，数量为pFileHead->PosCount个），
+		//然后存储Normal数据（float3，数量为pFileHead->NormalCount个），
+		//最后存储UV数据（float2，数量为pFileHead->UVCount个）。
 		const unsigned int TextureDataSize = StFBX_Sizeof_Vector3 * (pFileHead->PosCount + pFileHead->NormalCount) + StFBX_Sizeof_UV * pFileHead->UVCount;
 		//一个像素是4个字节
 		const int BytePerPixel = 4;
@@ -346,7 +349,15 @@ bool StKKFileKkbRead::CreateVertexValueTexture(int nWidth, int nHeight, const ch
 //----------------------------------------------------------------
 void StKKFileKkbRead::GenerateWidthHeight(int nPixelCount, int* pWidth, int* pHeight)
 {
-	const int TryWidth = 128;
+	//该贴图内会先存储Pos数据（float3，数量为pFileHead->PosCount个），
+	//然后存储Normal数据（float3，数量为pFileHead->NormalCount个），
+	//最后存储UV数据（float2，数量为pFileHead->UVCount个）。
+	//我们要保证这样一件事，当从贴图内读取某项数据时，该数据必须在同一行内。
+	//例如，从贴图内读取Pos数据，那么Pos.x，Pos.y，Pos.z必须在同一行内。
+	//这样的话，贴图宽度必须是6的整数倍。
+	//dds贴图要求宽度是4的整数倍。
+	//所以最终贴图宽度是24的整数倍。
+	const int TryWidth = 600;
 	*pWidth = TryWidth;
 	*pHeight = (nPixelCount + TryWidth - 1) / TryWidth;
 }

@@ -32,7 +32,6 @@ public:
 
 	void SetWorldMatrix(const XMFLOAT4X4* pMatWorld);
 	XMMATRIX GetWorldMatrix() const;
-	const XNA::AxisAlignedBox& GetAABB() const;
 
 private:
 	bool CreateVertexBuffer(const SoD3DModelInitParam_Cube* pParam);
@@ -41,8 +40,6 @@ private:
 	void ReleaseIndexBuffer();
 	bool CreateTexture(const char* szTextureName);
 	void ReleaseTexture();
-	bool CreateAABB(const SoD3DModelInitParam_Cube* pParam);
-	void ReleaseAABB();
 
 private:
 	struct stVertexType
@@ -57,8 +54,6 @@ private:
 	ID3D11Buffer* m_pIndexBuffer;
 	SoD3DShaderBase* m_pShader;
 	SoD3DTexture* m_pTexture;
-	//Axis Aligned Bounding Box
-	XNA::AxisAlignedBox m_kAABB;
 	//世界坐标系矩阵变换。
 	XMFLOAT4X4 m_matWorld;
 };

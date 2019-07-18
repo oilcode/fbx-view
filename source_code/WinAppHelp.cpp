@@ -5,7 +5,6 @@
 #include "SoSimpleLog.h"
 #include "SoGameTime.h"
 #include "SoCursor.h"
-#include "SoCoroutine.h"
 #include "SoStringHelp.h"
 #include "SoD3DLogicFlowHelp.h"
 #include "GGUILogicFlowHelp.h"
@@ -32,10 +31,6 @@ bool WinAppHelp_OnPreCreateWinApp()
 		return false;
 	}
 	SoGameTime::CreateGameTime();
-	if (SoCoroutineManager::CreateCoroutineManager() == false)
-	{
-		return false;
-	}
 	return true;
 }
 //----------------------------------------------------------------
@@ -88,7 +83,6 @@ void WinAppHelp_OnPreReleaseWinApp()
 //----------------------------------------------------------------
 void WinAppHelp_OnPostReleaseWinApp()
 {
-	SoCoroutineManager::ReleaseCoroutineManager();
 	SoGameTime::ReleaseGameTime();
 	WinInputMsgManager::ReleaseInputMsgManager();
 	SoSimpleLog::ReleaseSimpleLog();
@@ -99,11 +93,7 @@ void WinAppHelp_OnAppUpdate()
 	float fDeltaTime = SoGameTime::Get()->FrameBegin();
 	//在一帧的开始，把缓存起来的input消息分发出去。
 	WinInputMsgManager::Get()->DispatchInputMsg();
-	//
-	if (SoCoroutineManager::Get())
-	{
-		SoCoroutineManager::Get()->UpdateCoroutineManager(fDeltaTime);
-	}
+
 	///////////////////////////////////////
 	SoD3DLogicFlowHelp_Update(fDeltaTime);
 	GGUILogicFlowHelp_Update(fDeltaTime);

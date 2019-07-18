@@ -145,7 +145,7 @@ void StFBXModel::CalculateMeshDataByKeyFrame(const int nKeyFrameIndex)
 	for (int cpIndex = 0; cpIndex < nCPCount; ++cpIndex)
 	{
 		StFBXControlPoint* pCP = m_kControlPointGroup.GetAt(cpIndex);
-		if (pCP == 0)
+		if (pCP == NULL)
 		{
 			continue;
 		}
@@ -167,17 +167,17 @@ void StFBXModel::CalculateMeshDataByKeyFrame(const int nKeyFrameIndex)
 				break;
 			}
 			StFBXBone* pBone = m_kBoneGroup.GetAt(nBoneIndex);
-			if (pBone == 0)
+			if (pBone == NULL)
 			{
 				continue;
 			}
 			StFBXBoneAnimation* pBoneAnim = m_kAnimation.GetBoneAnimation(nBoneIndex);
-			if (pBoneAnim == 0)
+			if (pBoneAnim == NULL)
 			{
 				continue;
 			}
 			StFBXKeyFrame* pKeyFrame = pBoneAnim->GetAt(nKeyFrameIndex);
-			if (pKeyFrame == 0)
+			if (pKeyFrame == NULL)
 			{
 				continue;
 			}

@@ -6,7 +6,6 @@
 #include <D3DX11tex.h>
 #include <d3dx11effect.h>
 #include <xnamath.h>
-#include "xnacollision.h"
 //----------------------------------------------------------------
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dx11.lib")

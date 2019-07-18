@@ -508,6 +508,7 @@ StFBXBoneAnimation* StFBXModelAnimation::GetBoneAnimation(int nBoneIndex) const
 int StFBXModelAnimation::GetKeyFrameIndexByTime(float fTime)
 {
 	int nKeyFrameIndex = -1;
+	//找出一个帧数大于0的BoneAnimation对象。
 	StFBXBoneAnimation* pBoneAnim = NULL;
 	for (int boneIndex = 0; boneIndex < nAnimValidCount; ++boneIndex)
 	{
@@ -517,6 +518,7 @@ int StFBXModelAnimation::GetKeyFrameIndexByTime(float fTime)
 			break;
 		}
 	}
+	//有了BoneAnimation对象，判断给定的时间落在了哪一帧上。
 	if (pBoneAnim)
 	{
 		for (int i = 0; i < pBoneAnim->nFrameValidCount; ++i)

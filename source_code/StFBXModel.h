@@ -6,8 +6,8 @@
 //----------------------------------------------------------------
 class StFBXModel
 {
-	friend class StFBXManager;
 public:
+	friend class StFBXManager;
 	StFBXModel();
 	~StFBXModel();
 
@@ -19,7 +19,6 @@ public:
 	const StFBXMeshData* GetAnimationMeshData(float fTime);
 	//目前模型中只有一个动画。获取动画中有多少个关键帧。
 	int GetKeyFrameCount() const;
-	void CalculateMeshDataByKeyFrame(const int nKeyFrameIndex);
 	float GetAnimTimeLength();
 	//计算Mesh的包围盒。
 	void CalculateMeshBoundingBox(SoMathFloat3* pMinPos, SoMathFloat3* pMaxPos);
@@ -29,6 +28,7 @@ protected:
 	StFBXControlPointGroup* GetControlPointGroup_Modify();
 	StFBXBoneGroup* GetBoneGroup_Modify();
 	StFBXModelAnimation* GetAnimation_Modify();
+	void CalculateMeshDataByKeyFrame(const int nKeyFrameIndex);
 
 private:
 	//载入数据后，这里的Mesh数据渲染出来就是默认的Pose；

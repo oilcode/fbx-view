@@ -8,7 +8,6 @@
 #include "SoArray.h"
 #include "SoArrayUID.h"
 #include "SoSimpleLog.h"
-#include "SoCoroutine.h"
 #include "SoTimeHelp.h"
 #include "SoGameTime.h"
 #include "GGUIRect.h"
