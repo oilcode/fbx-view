@@ -6,6 +6,7 @@
 *.pdb
 *.sdf
 *.opensdf
+*.filters
 *.user
 *.iobj
 *.ipdb
